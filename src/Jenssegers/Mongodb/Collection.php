@@ -55,9 +55,15 @@ class Collection {
         }
 
         $start = microtime(true);
-
+        if($method == 'aggregate')
+        {
+            $parameters[] = ['cursor' =>(object) []];
+        }
         $result = call_user_func_array(array($this->collection, $method), $parameters);
-
+        if($method == 'aggregate')
+        {
+            $result['result'] = $result['cursor']['firstBatch'];
+        }
         // Once we have run the query we will calculate the time that it took to run and
         // then log the query, bindings, and execution time so we will report them on
         // the event that the developer needs them. We'll log time in milliseconds.
